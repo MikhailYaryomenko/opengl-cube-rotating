@@ -12,7 +12,7 @@ Window::Window(int width, int height, const char* title)
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
     #endif
 
-        m_Window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+        m_Window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (!m_Window)
     {
         glfwTerminate();
@@ -33,6 +33,7 @@ Window::Window(int width, int height, const char* title)
     if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
     {
         glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEPTH_TEST);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(glDebugOutput, nullptr);
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
@@ -58,5 +59,5 @@ void Window::Update()
 
 void Window::Clear()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
