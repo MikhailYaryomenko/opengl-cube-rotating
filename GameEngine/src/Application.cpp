@@ -4,6 +4,10 @@
 
 #include <string>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "VertexArray.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -12,7 +16,7 @@
 
 int main(void)
 {
-    Window window(640, 480, "Hello World");
+    Window window(720, 720, "Rotating cube");
 
     float positions[] = {
         0.0f, 0.0f, -0.5f, // 0
@@ -49,7 +53,31 @@ int main(void)
     {
         window.Clear();
 
+        float time = (float)glfwGetTime();
+
+        glm::mat4 model = glm::rotate(
+            glm::mat4(5.0f),
+            time * 4,
+            glm::vec3(1.0f, 8.5f, 2.5f)
+        );
+
+        glm::mat4 view = glm::translate(
+            glm::mat4(1.0f),
+            glm::vec3(0.0f, 0.0f, -2.0f)
+        );
+
+        glm::mat4 projection = glm::perspective(
+            glm::radians(45.0f),
+            640.0f / 480.0f,
+            0.1f,
+            100.0f
+        );
+
+        glm::mat4 mvp = projection * view * model;
+
         shader.Bind();
+        shader.SetUniformMat4f("u_MVP", mvp);
+
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr);
 
         window.Update();
